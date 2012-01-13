@@ -37,9 +37,11 @@ class Rate(db.Model):
     __tablename__ = 'fuedf_rate'
     rid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(128), nullable=False)
+    color = db.Column(db.String(7), nullable=False)
 
-    def __init__(self, name):
+    def __init__(self, name, color):
         self.name = name
+        self.color = color
 
     def __repr__(self):
         return '<Rate %r(%r)' % (self.name, self.rid)

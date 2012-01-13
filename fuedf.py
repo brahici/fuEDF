@@ -15,10 +15,12 @@ if len(sys.argv) == 2 and sys.argv[1] == 'initdb':
         _db.session.add(user)
         updated = True
 
-    for rate_name in ('BleuCreuses', 'BleuPleines', 'BlancCreuses', 'BlancPleines',
-            'RougeCreuses', 'RougePleines'):
+    for rate_name, rate_color in (
+            ('BleuCreuses', '#0000ff'), ('BleuPleines', '#0000ff'),
+            ('BlancCreuses', '#000000'), ('BlancPleines', '#000000'),
+            ('RougeCreuses', '#ff0000'), ('RougePleines', '#ff0000')):
         if not _Rate.query.filter_by(name=rate_name).all():
-            rate = _Rate(rate_name)
+            rate = _Rate(rate_name, rate_color)
             _db.session.add(rate)
             updated = True
     if updated:
