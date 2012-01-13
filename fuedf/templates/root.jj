@@ -1,13 +1,35 @@
 {% extends "layout.jj" %}
 
 {% block body %}
-    <p>Last entries</p>
+    <p>Entries</p>
     <ul>
-    {% for entry in entries %}
-        <li>{{ entry.date }}|{{ entry.rate.name }}|{{ entry.value }}</li>
+    {% for entry in entries.items %}
+        <li>{{ entry.date }}|<span style="color: {{ entry.rate.color }};">{{ entry.rate.name }}</span>|{{ entry.value }}</li>
     {% else %}
         <li>No entries so far.</li>
     {% endfor %}
+    {% if entries.items %}
+        {% if entries.page != 1 %}
+            <a href="{{ url_for('index', page=1) }}">&lt;&lt;</a>
+        {% else %}
+            <span>&lt;&lt;</span>
+        {% endif %}
+        {% if entries.has_prev %}
+            <a href="{{ url_for('index', page=entries.prev_num) }}">&lt;</a>
+        {% else %}
+            <span>&lt;</span>
+        {% endif %}
+        {% if entries.has_next %}
+            <a href="{{ url_for('index', page=entries.next_num) }}">&gt;</a>
+        {% else %}
+            <span>&gt;</span>
+        {% endif %}
+        {% if entries.page != entries.pages %}
+            <a href="{{ url_for('index', page=entries.pages) }}">&gt;&gt;</a>
+        {% else %}
+            <span>&gt;&gt;</span>
+        {% endif %}
+    {% endif %}
     </ul>
     <p>Add <a href="{{ url_for('consumption_add') }}">new</a> value</p>
 {% endblock body %}

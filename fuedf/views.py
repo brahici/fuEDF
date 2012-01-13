@@ -6,10 +6,15 @@ from flask import render_template, request, redirect, url_for, g, jsonify
 from . import app
 from .models import db, Consumption, Rate, User
 
-@app.route('/')
+@app.route('/', methods=['GET', ])
 def index():
-    entries = Consumption.query.all()
-    #entries = Consumption.query.limit(6)
+    page = request.args.get('page', 1)
+    try:
+        page = int(page)
+    except ValueError:
+        return redirect(url_for('index'))
+    entries = Consumption.query.order_by('date desc').paginate(
+            page, 6, error_out=False)
     return render_template('root.jj', entries=entries)
 
 @app.route('/cons/add', methods=['POST', 'GET'])
@@ -25,7 +30,6 @@ def consumption_add():
                     _f['value'].strip())
             db.session.add(_rate)
             g._commit_requested = True
-            #return redirect(url_for('index'))
             return redirect(url_for('consumption_add'))
             return 'OK'
         values = {
