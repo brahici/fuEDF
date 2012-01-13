@@ -1,0 +1,28 @@
+{% extends "layout.jj" %}
+
+{% block body %}
+    {% if error %}
+        <p><strong>Error:</strong> {{ error }}
+    {% endif %}
+    <form action="{{ url_for(server_method) }}" method="post">
+        <dl>
+            <dt>Date
+            <dd><input type="text" maxlength="10" name="date" {% if values.date %}value="{{ values.date }}"{% endif %}>
+            <dt>Rate:
+            <dd>
+                <select name="rate">
+                    {% for rate in g.rates %}
+                        <option value="{{ rate.rid }}" {% if values.rate == rate.rid %} selected="selected" {% endif %}>{{ rate.name }}</option>
+                    {% endfor %}
+                </select>
+            <dt>Value:
+            <dd><input type="text" maxlength="8" name="value" {% if values.value %}value="{{ values.value }}"{% endif %}>
+            {% if server_method == 'consumption_add' %}
+            <dd><input type="submit" value="Add">
+            {% else %}
+            <dd><input type="submit" value="Edit">
+            {% endif %}
+        </dl>
+    </form>
+{% endblock body %}
+

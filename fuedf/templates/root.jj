@@ -1,0 +1,13 @@
+{% extends "layout.jj" %}
+
+{% block body %}
+    <p>Last entries</p>
+    <ul>
+    {% for entry in entries %}
+        <li>{{ entry.date }}|{{ entry.rate.name }}|{{ entry.value }}</li>
+    {% else %}
+        <li>No entries so far.</li>
+    {% endfor %}
+    </ul>
+    <p>Add <a href="{{ url_for('consumption_add') }}">new</a> value</p>
+{% endblock body %}
