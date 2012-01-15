@@ -26,8 +26,15 @@ def consumption_add():
         _f = request.form
         if (_f['date'].strip() and _f['value'].strip() and
                 _f['rate'].strip()):
-            _rate = Consumption(_f['date'].strip(), _f['rate'].strip(),
-                    _f['value'].strip())
+            date_ = _f['date'].strip()
+            rate_ = _f['rate'].strip()
+            value_ = int(_f['value'].strip())
+            delta_ = 0
+            prev_cons = Consumption.query.filter(Consumption.date < date_ and \
+                    Consumption.rate_id == rate_).order_by('date desc').first()
+            if prev_cons:
+                delta_ = value_ - prev_cons.value
+            _rate = Consumption(date_, rate_, value_, delta_)
             db.session.add(_rate)
             g._commit_requested = True
             return redirect(url_for('consumption_add'))
