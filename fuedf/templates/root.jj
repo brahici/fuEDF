@@ -4,7 +4,10 @@
     <p>Entries</p>
     <ul>
     {% for entry in entries.items %}
-        <li>{{ entry.date }}|<span style="color: {{ entry.rate.color }};">{{ entry.rate.name }}</span>|{{ entry.value }}</li>
+        <li>{{ entry.date }} |
+            <span style="color: {{ entry.rate.color }};">{{ entry.rate.name }}</span> |
+            {{ entry.value }} |
+            {{ entry.delta }}</li>
     {% else %}
         <li>No entries so far.</li>
     {% endfor %}
