@@ -1,0 +1,72 @@
+* {
+  margin: 0em;
+  padding: 0em;
+  font-family: Droid Sans;
+  font-size: 1em;
+  color: #000000;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+
+a,a:visited {
+  color: black;
+  text-decoration: none;
+}
+
+h1.title {
+  font-size: 3em;
+  margin: 0.2em 0.2em 0.2em 0.6em;
+}
+
+#main {
+  margin: 0.2em 0.2em 0.2em 0.2em;
+}
+
+#consumptions {
+  font-size: 1.4em;
+  margin: 0.2em 0.2em 0.2em 0.2em;
+  padding: 0.0em 0.0em 0.0em 1.2em;
+  width: 22.7em;
+}
+
+#cons_list {
+  margin: 0em 0em 0em 0em;
+  padding: 0.2em 0.0em 0.2em 0.0em;
+  border-top: 0.08em solid black;
+  border-bottom: 0.08em solid black;
+}
+
+.cons_header {
+  list-style-type: none;
+  font-family: Droid Sans Mono;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+.cons_detail {
+  list-style-type: none;
+  font-family: Droid Sans Mono;
+  font-size: 0.8em;
+}
+
+.cons_cell {
+  width: 7em;
+  display: inline-block;
+}
+
+#page_navigator
+{
+  margin: 0.2em 0.0em 0.0em 0.0em;
+  text-align: center;
+  border: 0.05em dotted #000000;
+}
