@@ -20,8 +20,9 @@ class Consumption(db.Model):
     rate = db.relationship('Rate', backref=db.backref('consumptions',
             lazy='dynamic'))
     value = db.Column(db.Integer, nullable=False)
+    delta = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, date, rate, value):
+    def __init__(self, date, rate, value, delta=0):
         if isinstance(date, types.StringTypes):
             date_ = datetime.datetime.strptime(date, '%Y-%m-%d').date()
         else:
@@ -29,6 +30,7 @@ class Consumption(db.Model):
         self.date = date_
         self.rate_id = rate
         self.value = value
+        self.delta = delta
 
     def __repr__(self):
         return '<Consumption %r@%r>' % (self.rate, self.date)
