@@ -1,6 +1,8 @@
 <!doctype html>
 <title>fuEDF</title>
 <link rel="stylesheet" type="text/css" href="{{url_for('static', filename="style.css")}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename="js/extjs/resources/css/ext-all.css")}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename="js/extjs/ext.js")}}">
 <h1 class="title"><a href="{{ url_for('index') }}">fuEDF</a></h1>
 <div id="main">
     {% block body %}{% endblock %}
