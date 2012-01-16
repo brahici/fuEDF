@@ -3,40 +3,41 @@
 {% block body %}
 <div id="consumptions">
     <div class="cons_header">
-        <span class="cons_cell center">Date</span><span class="cons_cell center">Rate</span><span class="cons_cell center">Value</span><span class="cons_cell center">Delta</span>
+        <span class="cons_cell center small_00">Date</span><span class="cons_cell center small_00">Rate</span><span class="cons_cell center small_00">Value</span><span class="cons_cell center small_00">Delta</span>
     </div>
     <!--hr-->
     <ul id="cons_list">
     {% for entry in entries.items %}
-        <li class="cons_detail">
+        <li class="cons_detail small_00">
             <span class="cons_cell left">{{ entry.date }}</span><span class="cons_cell left" style="color: {{ entry.rate.color }};">{{ entry.rate.name }}</span><span class="cons_cell right">{{ entry.value }}</span><span class="cons_cell right">{{ entry.delta }}</span>
         </li>
     {% else %}
         <li>No entries so far.</li>
     {% endfor %}
     </ul>
+    <p class="right small_00">total : {{ total }}</p>
     <!--hr-->
     <div id="page_navigator">
         {% if entries.items %}
             {% if entries.page != 1 %}
                 <a href="{{ url_for('index', page=1) }}">&lt;&lt;</a>
             {% else %}
-                <span>&lt;&lt;</span>
+                <span class="inactive">&lt;&lt;</span>
             {% endif %}
             {% if entries.has_prev %}
                 <a href="{{ url_for('index', page=entries.prev_num) }}">&lt;</a>
             {% else %}
-                <span>&lt;</span>
+                <span class="inactive">&lt;</span>
             {% endif %}
             {% if entries.has_next %}
                 <a href="{{ url_for('index', page=entries.next_num) }}">&gt;</a>
             {% else %}
-                <span>&gt;</span>
+                <span class="inactive">&gt;</span>
             {% endif %}
             {% if entries.page != entries.pages %}
                 <a href="{{ url_for('index', page=entries.pages) }}">&gt;&gt;</a>
             {% else %}
-                <span>&gt;&gt;</span>
+                <span class="inactive">&gt;&gt;</span>
             {% endif %}
         {% endif %}
     </div>

@@ -15,7 +15,8 @@ def index():
         return redirect(url_for('index'))
     entries = Consumption.query.order_by('date desc').paginate(
             page, 6, error_out=False)
-    return render_template('root.jj', entries=entries)
+    total = sum([cons.delta for cons in entries.items])
+    return render_template('root.jj', entries=entries, total=total)
 
 @app.route('/cons/add', methods=['POST', 'GET'])
 def consumption_add():
@@ -54,3 +55,4 @@ def get_rates():
     for rate in g.rates:
         rates_.append((rate.name, rate.rid))
     return jsonify(rates=dict(rates_))
+

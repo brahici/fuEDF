@@ -18,6 +18,14 @@
   text-align: center;
 }
 
+.small_00 {
+  font-size: 0.8em;
+}
+
+.inactive {
+  color: #aaaaaa;
+}
+
 a,a:visited {
   color: black;
   text-decoration: none;
@@ -50,13 +58,11 @@ h1.title {
   list-style-type: none;
   font-family: Droid Sans Mono;
   font-weight: bold;
-  font-size: 0.8em;
 }
 
 .cons_detail {
   list-style-type: none;
   font-family: Droid Sans Mono;
-  font-size: 0.8em;
 }
 
 .cons_cell {
