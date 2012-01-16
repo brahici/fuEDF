@@ -9,7 +9,7 @@
     <ul id="cons_list">
     {% for entry in entries.items %}
         <li class="cons_detail small_00">
-            <span class="cons_cell left">{{ entry.date }}</span><span class="cons_cell left" style="color: {{ entry.rate.color }};">{{ entry.rate.name }}</span><span class="cons_cell right">{{ entry.value }}</span><span class="cons_cell right">{{ entry.delta }}</span>
+            <span class="cons_cell left">{{ entry.date|datetime('%d.%m.%Y') }}</span><span class="cons_cell left" style="color: {{ entry.rate.color }};">{{ entry.rate.name }}</span><span class="cons_cell right">{{ entry.value }}</span><span class="cons_cell right">{{ entry.delta }}</span>
         </li>
     {% else %}
         <li>No entries so far.</li>

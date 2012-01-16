@@ -16,6 +16,11 @@ app.config['SQLALCHEMY_ECHO'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s/fuedf.db' % here
 #print app.config['SQLALCHEMY_DATABASE_URI']
 
+def _jinja2_filter_datetime(date, fmt='%c'):
+    return date.strftime(fmt)
+
+app.jinja_env.filters['datetime'] = _jinja2_filter_datetime
+
 # import models
 from . import models
 
