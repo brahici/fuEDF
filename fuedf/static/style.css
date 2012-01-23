@@ -1,9 +1,14 @@
 * {
   margin: 0em;
   padding: 0em;
-  font-family: Droid Sans;
-  font-size: 1em;
   color: #000000;
+}
+
+body {
+  font-family: Droid Sans;
+  /*
+  font-size: 1em;
+  */
 }
 
 .left {
@@ -32,6 +37,7 @@ a,a:visited {
 }
 
 h1.title {
+  font-family: Swift;
   font-size: 3em;
   margin: 0.2em 0.2em 0.2em 0.6em;
 }
