@@ -5,7 +5,6 @@
     <div class="cons_header">
         <span class="cons_cell center small_00">Date</span><span class="cons_cell center small_00">Rate</span><span class="cons_cell center small_00">Value</span><span class="cons_cell center small_00">Delta</span>
     </div>
-    <!--hr-->
     <ul id="cons_list">
     {% for entry in entries.items %}
         <li class="cons_detail small_00">
@@ -16,7 +15,6 @@
     {% endfor %}
     </ul>
     <p class="right small_00">total : {{ total }}</p>
-    <!--hr-->
     <div id="page_navigator">
         {% if entries.items %}
             {% if entries.page != 1 %}
