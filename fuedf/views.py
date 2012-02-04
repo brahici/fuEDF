@@ -51,6 +51,12 @@ def consumption_add():
         return render_template('edit_cons.jj', error=error,
                 server_method='consumption_add', values=values)
 
+@app.route('/cons/<int:rate_rid>')
+def get_rates_cons(rate_rid):
+    entries = Consumption.query.filter(Consumption.rate_id == rate_rid).order_by('date desc').all()
+    total = sum([cons.delta for cons in entries])
+    return render_template('cons.jj', entries=entries, total=total)
+
 @app.route('/_get_rates')
 def get_rates():
     rates_ = []

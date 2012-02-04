@@ -60,6 +60,18 @@ h1.title {
   border-bottom: 0.08em solid black;
 }
 
+#rates {
+  position: absolute;
+  padding: 0.4em 0.2em 0.4em 0.4em;
+  font-size: 1.4em;
+  left: 25em;
+  top: 4.4em;
+  border: 0.05em dotted #000000;
+}
+#rates li {
+  list-style-type: none;
+}
+
 .cons_header {
   list-style-type: none;
   font-family: Droid Sans Mono;

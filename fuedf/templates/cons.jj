@@ -1,0 +1,26 @@
+{% extends "layout.jj" %}
+
+{% block body %}
+<div id="consumptions">
+    <div class="cons_header">
+        <span class="cons_cell center small_00">Date</span><span class="cons_cell center small_00">Rate</span><span class="cons_cell center small_00">Value</span><span class="cons_cell center small_00">Delta</span>
+    </div>
+    <ul id="cons_list">
+    {% for entry in entries %}
+        <li class="cons_detail small_00">
+            <span class="cons_cell left">{{ entry.date|datetime('%d.%m.%Y') }}</span><span class="cons_cell left" style="color: {{ entry.rate.color }};">{{ entry.rate.name }}</span><span class="cons_cell right">{{ entry.value }}</span><span class="cons_cell right">{{ entry.delta }}</span>
+        </li>
+    {% else %}
+        <li>No entries so far.</li>
+    {% endfor %}
+    </ul>
+    <p class="right small_00">total : {{ total }}</p>
+</div>
+<div id="rates">
+    <ul>
+    {% for rate in g.rates %}
+        <li><a href="{{ url_for('get_rates_cons', rate_rid=rate.rid) }}" style="color: {{ rate.color }};">{{ rate.name }}</a></li>
+    {% endfor %}
+    </ul>
+<div>
+{% endblock body %}
