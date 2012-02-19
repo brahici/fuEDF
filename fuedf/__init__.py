@@ -19,7 +19,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s/fuedf.db' % here
 def _jinja2_filter_datetime(date, fmt='%c'):
     return date.strftime(fmt)
 
+def _jinja2_filter_reversed(iterable):
+    return reversed(iterable)
+
 app.jinja_env.filters['datetime'] = _jinja2_filter_datetime
+app.jinja_env.filters['reversed'] = _jinja2_filter_reversed
 
 # import models
 from . import models
