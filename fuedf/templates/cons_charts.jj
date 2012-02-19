@@ -1,0 +1,104 @@
+{% extends "layout.jj" %}
+
+{% block jsinc %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="/static/js/highcharts.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+var cons_chart;
+
+gcd_cb = function(data, status) {
+    var series = [];
+    $.each(data.rates, function(idx, rate) {
+        series.push({'name': rate, 'data': data.values[rate]});
+    });
+    cons_chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'chart_container',
+            type: 'line'
+        },
+        title: {
+            text: 'EDF Consumptions'
+        },
+        xAxis: {
+            categories: data.dates
+        },
+        yAxis: {
+            title: {
+            text: 'MW/h'
+            }
+        },
+        series: series
+    });
+};
+
+$(document).ready(function() {
+    $.getJSON('/_get_charts_data', {'mode': 'values'}, gcd_cb);
+});
+
+refresh_chart = function() {
+    var mode = $('#chart_mode').val();
+    var dt_start = $('#date_start').val();
+    var dt_end = $('#date_end').val();
+    $.getJSON('/_get_charts_data', {'mode': mode, 'start_date': dt_start, 'end_date': dt_end}, gcd_cb);
+}
+
+reset_criterias = function() {
+    $('#chart_mode').val('values');
+    $('#date_start').val('');
+    $('#date_end').val('');
+    if($('#live_chart').is(':checked')) {
+        refresh_chart();
+    }
+}
+
+live_chart_onchange = function() {
+    if($('#live_chart').is(':checked')) {
+        $('#button_apply').hide();
+        refresh_chart();
+    } else {
+        $('#button_apply').show();
+    }
+}
+
+criteria_onchange = function() {
+    if($('#live_chart').is(':checked')) {
+        refresh_chart();
+    }
+}
+
+</script>
+{% endblock jsinc %}
+
+{% block body %}
+
+<div id="chart_criteria_container">
+<input type="checkbox" name="live_chart" id="live_chart" onchange="live_chart_onchange()"> Live chart</input>
+<br>
+<span>Chart mode : </span>
+<select id="chart_mode" name="chart_mode" onchange="criteria_onchange();">
+    <option value="values" selected="selected">Values</option>
+    <option value="progressive">Progressive</option>
+    <option value="total">Total</option>
+</select>
+<span>Date start : </span>
+<select id="date_start" name="date_start" onchange="criteria_onchange();">
+    <option value="">----</option>
+    {% for date in dates %}
+    <option value="{{ date }}">{{ date }}</option>
+    {% endfor %}
+</select>
+<span>Date end : </span>
+<select id="date_end" name="date_end" onchange="criteria_onchange();">
+    <option value="">----</option>
+    {% for date in dates|reversed %}
+    <option value="{{ date }}">{{ date }}</option>
+    {% endfor %}
+</select>
+<button id="button_apply" onclick="refresh_chart();">Apply</button>
+<button onclick="reset_criterias();">Reset</button>
+</div>
+
+<div id="chart_container" style="width: 95%; height: 50em;"><div>
+
+{% endblock body %}
