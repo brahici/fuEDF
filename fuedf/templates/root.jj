@@ -2,6 +2,7 @@
 
 {% block body %}
 <div id="consumptions">
+    <a href="{{ url_for('consumption_charts') }}">Chart view</a>
     <div class="cons_header">
         <span class="cons_cell center small_00">Date</span><span class="cons_cell center small_00">Rate</span><span class="cons_cell center small_00">Value</span><span class="cons_cell center small_00">Delta</span>
     </div>

@@ -53,7 +53,8 @@ def consumption_add():
 
 @app.route('/cons/<int:rate_rid>')
 def get_rates_cons(rate_rid):
-    entries = Consumption.query.filter(Consumption.rate_id == rate_rid).order_by('date desc').all()
+    entries = Consumption.query.filter(Consumption.rate_id == rate_rid)\
+            .order_by('date desc').all()
     total = sum([cons.delta for cons in entries])
     return render_template('cons.jj', entries=entries, total=total)
 
@@ -76,4 +77,52 @@ def _get_current_totals():
         res_.setdefault(cons.rate.name, []).append(cons.delta)
     res = dict((rate_name, sum(values)) for rate_name, values in res_.items())
     return jsonify(totals=res)
+
+@app.route('/charts')
+def consumption_charts():
+    dates = [cons.date.strftime('%Y-%m-%d')
+            for cons in Consumption.query.distinct(Consumption.date) \
+                    .group_by(Consumption.date) \
+                    .order_by(Consumption.date).all()]
+    return render_template('cons_charts.jj', dates=dates)
+
+_DATA_CHART_MODES = ['values', 'progressive', 'total', ]
+
+@app.route('/_get_charts_data')
+def _get_charts_data():
+    mode = request.args.get('mode', 'values')
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    if mode not in _DATA_CHART_MODES:
+        mode = 'values'
+    if start_date and end_date and start_date != end_date:
+        # swap dates if start is after end
+        if start_date > end_date:
+            start_date, end_date = end_date, start_date
+        entries = Consumption.query.filter(Consumption.date>=start_date) \
+                    .filter(Consumption.date<=end_date).all()
+    elif start_date and not end_date:
+        entries = Consumption.query.filter(Consumption.date>=start_date).all()
+    elif end_date and not start_date:
+        entries = Consumption.query.filter(Consumption.date<=end_date).all()
+    else:
+        entries = Consumption.query.all()
+    values = {}
+    dates = []
+    rates = []
+    for entry in entries:
+        fmt_date = entry.date.strftime('%Y-%m-%d')
+        rate = entry.rate.name
+        if fmt_date not in dates:
+            dates.append(fmt_date)
+        if rate not in rates:
+            rates.append(rate)
+        _values = values.setdefault(rate, [])
+        if _values and mode == 'progressive':
+            _values.append(_values[-1] + entry.delta)
+        elif mode == 'total':
+            _values.append(entry.value)
+        else:
+            _values.append(entry.delta)
+    return jsonify(dates=dates, values=values, rates=rates)
 

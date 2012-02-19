@@ -47,13 +47,13 @@ reset_criterias = function() {
     $('#chart_mode').val('values');
     $('#date_start').val('');
     $('#date_end').val('');
-    if($('#live_chart').is(':checked')) {
+    if($('#dynamic_chart').is(':checked')) {
         refresh_chart();
     }
 }
 
-live_chart_onchange = function() {
-    if($('#live_chart').is(':checked')) {
+dynamic_chart_onchange = function() {
+    if($('#dynamic_chart').is(':checked')) {
         $('#button_apply').hide();
         refresh_chart();
     } else {
@@ -62,7 +62,7 @@ live_chart_onchange = function() {
 }
 
 criteria_onchange = function() {
-    if($('#live_chart').is(':checked')) {
+    if($('#dynamic_chart').is(':checked')) {
         refresh_chart();
     }
 }
@@ -73,7 +73,10 @@ criteria_onchange = function() {
 {% block body %}
 
 <div id="chart_criteria_container">
-<input type="checkbox" name="live_chart" id="live_chart" onchange="live_chart_onchange()"> Live chart</input>
+<span>Dynamic chart :
+<input type="checkbox" name="dynamic_chart" id="dynamic_chart"
+        onchange="dynamic_chart_onchange()"></input>
+</span>
 <br>
 <span>Chart mode : </span>
 <select id="chart_mode" name="chart_mode" onchange="criteria_onchange();">
@@ -102,3 +105,4 @@ criteria_onchange = function() {
 <div id="chart_container" style="width: 95%; height: 50em;"><div>
 
 {% endblock body %}
+
