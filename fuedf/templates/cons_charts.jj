@@ -83,6 +83,7 @@ criteria_onchange = function() {
     <option value="values" selected="selected">Values</option>
     <option value="progressive">Progressive</option>
     <option value="total">Total</option>
+    <option value="global">Global</option>
 </select>
 <span>Date start : </span>
 <select id="date_start" name="date_start" onchange="criteria_onchange();">

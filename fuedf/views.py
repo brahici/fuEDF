@@ -86,7 +86,7 @@ def consumption_charts():
                     .order_by(Consumption.date).all()]
     return render_template('cons_charts.jj', dates=dates)
 
-_DATA_CHART_MODES = ['values', 'progressive', 'total', ]
+_DATA_CHART_MODES = ['values', 'progressive', 'total', 'global', ]
 
 @app.route('/_get_charts_data')
 def _get_charts_data():
@@ -110,19 +110,39 @@ def _get_charts_data():
     values = {}
     dates = []
     rates = []
-    for entry in entries:
-        fmt_date = entry.date.strftime('%Y-%m-%d')
-        rate = entry.rate.name
-        if fmt_date not in dates:
-            dates.append(fmt_date)
-        if rate not in rates:
-            rates.append(rate)
-        _values = values.setdefault(rate, [])
-        if _values and mode == 'progressive':
-            _values.append(_values[-1] + entry.delta)
-        elif mode == 'total':
-            _values.append(entry.value)
-        else:
-            _values.append(entry.delta)
+    if mode == 'global':
+        rates = ['Global', ]
+        values = {'Global': []}
+        _values = values['Global']
+        cur_date = ''
+        date_cons = 0
+        for entry in entries:
+            fmt_date = entry.date.strftime('%Y-%m-%d')
+            if fmt_date not in dates:
+                dates.append(fmt_date)
+            if cur_date == fmt_date:
+                date_cons += entry.delta
+            else:
+                if cur_date:
+                    _values.append(date_cons)
+                cur_date = fmt_date
+                date_cons = entry.delta
+        if cur_date:
+            _values.append(date_cons)
+    else:
+        for entry in entries:
+            fmt_date = entry.date.strftime('%Y-%m-%d')
+            rate = entry.rate.name
+            if fmt_date not in dates:
+                dates.append(fmt_date)
+            if rate not in rates:
+                rates.append(rate)
+            _values = values.setdefault(rate, [])
+            if _values and mode == 'progressive':
+                _values.append(_values[-1] + entry.delta)
+            elif mode == 'total':
+                _values.append(entry.value)
+            else:
+                _values.append(entry.delta)
     return jsonify(dates=dates, values=values, rates=rates)
 
