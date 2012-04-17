@@ -21,11 +21,19 @@ gcd_cb = function(data, status) {
             text: 'EDF Consumptions'
         },
         xAxis: {
-            categories: data.dates
+            categories: data.dates,
+            tickmarkPlacement: 'on',
+            labels: {
+                align: 'center',
+                rotation: -25,
+                x: 0,
+                y: 25
+            }
         },
         yAxis: {
             title: {
-            text: 'MW/h'
+                min: 0,
+                text: 'MW/h'
             }
         },
         series: series
