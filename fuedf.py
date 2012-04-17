@@ -16,9 +16,9 @@ if len(sys.argv) == 2 and sys.argv[1] == 'initdb':
         updated = True
 
     for rate_name, rate_color in (
-            ('BleuCreuses', '#0000ff'), ('BleuPleines', '#0000ff'),
-            ('BlancCreuses', '#000000'), ('BlancPleines', '#000000'),
-            ('RougeCreuses', '#ff0000'), ('RougePleines', '#ff0000')):
+            ('BleuCreuses', '#4572a7'), ('BleuPleines', '#4572a7'),
+            ('BlancCreuses', '#b6b6b6'), ('BlancPleines', '#b6b6b6'),
+            ('RougeCreuses', '#aa4643'), ('RougePleines', '#aa4643')):
         if not _Rate.query.filter_by(name=rate_name).all():
             rate = _Rate(rate_name, rate_color)
             _db.session.add(rate)
