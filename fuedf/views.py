@@ -116,9 +116,11 @@ def _get_charts_data():
     values = {}
     dates = []
     rates = []
+    colors = []
     if mode == 'global':
         rates = ['Global', ]
         values = {'Global': []}
+        colors = []
         _values = values['Global']
         cur_date = ''
         date_cons = 0
@@ -143,6 +145,7 @@ def _get_charts_data():
                 dates.append(fmt_date)
             if rate not in rates:
                 rates.append(rate)
+                colors.append(entry.rate.color)
             _values = values.setdefault(rate, [])
             if _values and mode == 'progressive':
                 _values.append(_values[-1] + entry.delta)
@@ -150,5 +153,5 @@ def _get_charts_data():
                 _values.append(entry.value)
             else:
                 _values.append(entry.delta)
-    return jsonify(dates=dates, values=values, rates=rates)
+    return jsonify(dates=dates, values=values, rates=rates, colors=colors)
 

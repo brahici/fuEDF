@@ -10,7 +10,19 @@ var cons_chart;
 gcd_cb = function(data, status) {
     var series = [];
     $.each(data.rates, function(idx, rate) {
-        series.push({'name': rate, 'data': data.values[rate]});
+        var _style = 'Solid';
+        var _color = '#3d96ae';
+        if(rate.indexOf('Creuses') != -1) {
+            _style = 'ShortDot';
+        }
+        if(rate != 'Global') {
+            _color = data.colors[idx];
+        }
+        series.push({
+            name: rate,
+            data: data.values[rate],
+            color: _color,
+            dashStyle: _style});
     });
     cons_chart = new Highcharts.Chart({
         chart: {
@@ -24,16 +36,10 @@ gcd_cb = function(data, status) {
             categories: data.dates,
             tickmarkPlacement: 'on',
             labels: {
-                align: 'center',
+                align: 'right',
                 rotation: -25,
                 x: 0,
-                y: 25
-            }
-        },
-        yAxis: {
-            title: {
-                min: 0,
-                text: 'MW/h'
+                y: 15
             }
         },
         series: series
