@@ -33,7 +33,12 @@ gcd_cb = function(data, status) {
 };
 
 $(document).ready(function() {
-    $.getJSON('/_get_charts_data', {'mode': 'values'}, gcd_cb);
+    var args = {
+        'mode': 'values',
+        'start_date': '{{ start_date  }}',
+        'end_date': '{{ end_date  }}',
+    }
+    $.getJSON('/_get_charts_data', args, gcd_cb);
 });
 
 refresh_chart = function() {
@@ -45,8 +50,8 @@ refresh_chart = function() {
 
 reset_criterias = function() {
     $('#chart_mode').val('values');
-    $('#date_start').val('');
-    $('#date_end').val('');
+    $('#date_start').val('{{ start_date }}');
+    $('#date_end').val('{{ end_date }}');
     if($('#dynamic_chart').is(':checked')) {
         refresh_chart();
     }
@@ -88,22 +93,30 @@ criteria_onchange = function() {
 <span>Date start : </span>
 <select id="date_start" name="date_start" onchange="criteria_onchange();">
     <option value="">----</option>
-    {% for date in dates %}
-    <option value="{{ date }}">{{ date }}</option>
+    {% for date in dates|reversed %}
+        {% if date == start_date %}
+            <option value="{{ date }}" selected="selected">{{ date }}</option>
+        {% else %}
+            <option value="{{ date }}">{{ date }}</option>
+        {% endif %}}
     {% endfor %}
 </select>
 <span>Date end : </span>
 <select id="date_end" name="date_end" onchange="criteria_onchange();">
     <option value="">----</option>
     {% for date in dates|reversed %}
-    <option value="{{ date }}">{{ date }}</option>
+        {% if date == end_date %}
+            <option value="{{ date }}" selected="selected">{{ date }}</option>
+        {% else %}
+            <option value="{{ date }}">{{ date }}</option>
+        {% endif %}}
     {% endfor %}
 </select>
 <button id="button_apply" onclick="refresh_chart();">Apply</button>
 <button onclick="reset_criterias();">Reset</button>
 </div>
 
-<div id="chart_container" style="width: 95%; height: 50em;"><div>
+<div id="chart_container" style="width: 95%; height: 50em;"></div>
 
 {% endblock body %}
 

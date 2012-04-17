@@ -8,6 +8,8 @@ from flask import render_template, request, redirect, url_for, g, jsonify
 from . import app
 from .models import db, Consumption, Rate, User
 
+DEFAULT_CHART_WEEKS_COUNT = 10
+
 @app.route('/', methods=['GET', ])
 def index():
     page = request.args.get('page', 1)
@@ -84,7 +86,11 @@ def consumption_charts():
             for cons in Consumption.query.distinct(Consumption.date) \
                     .group_by(Consumption.date) \
                     .order_by(Consumption.date).all()]
-    return render_template('cons_charts.jj', dates=dates)
+    start_date = len(dates) > DEFAULT_CHART_WEEKS_COUNT and \
+            dates[-DEFAULT_CHART_WEEKS_COUNT] or dates[0]
+    end_date = dates[-1]
+    return render_template('cons_charts.jj', dates=dates,
+            start_date=start_date, end_date=end_date)
 
 _DATA_CHART_MODES = ['values', 'progressive', 'total', 'global', ]
 
