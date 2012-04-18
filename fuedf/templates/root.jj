@@ -12,7 +12,9 @@
             <span class="cons_cell left">{{ entry.date|datetime('%d.%m.%Y') }}</span><span class="cons_cell left"><a href="{{ url_for('get_rates_cons', rate_rid=entry.rate.rid) }}" style="color: {{ entry.rate.color }};">{{ entry.rate.name }}</a></span><span class="cons_cell right">{{ entry.value }}</span><span class="cons_cell right">{{ entry.delta }}</span>
         </li>
     {% else %}
-        <li>No entries so far.</li>
+        <li class="cons_detail small_00">
+            <span class="center">No entries so far.</span>
+        </li>
     {% endfor %}
     </ul>
     <p class="right small_00">total : {{ total }}</p>
