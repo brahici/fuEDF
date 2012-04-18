@@ -19,7 +19,7 @@
         </li>
     {% endfor %}
     </ul>
-    <p class="right small_00">total : {{ total }}</p>
+    <p class="right small_00">total : <span id="cons_total">{{ total }}</span></p>
     <div id="page_navigator">
         {% if entries.items %}
             {% if entries.page != 1 %}
