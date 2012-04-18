@@ -112,7 +112,7 @@ criteria_onchange = function() {
             <option value="{{ date }}" selected="selected">{{ date }}</option>
         {% else %}
             <option value="{{ date }}">{{ date }}</option>
-        {% endif %}}
+        {% endif %}
     {% endfor %}
 </select>
 <span>Date end : </span>
@@ -123,7 +123,7 @@ criteria_onchange = function() {
             <option value="{{ date }}" selected="selected">{{ date }}</option>
         {% else %}
             <option value="{{ date }}">{{ date }}</option>
-        {% endif %}}
+        {% endif %}
     {% endfor %}
 </select>
 <button id="button_apply" onclick="refresh_chart();">Apply</button>
