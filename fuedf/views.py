@@ -28,6 +28,7 @@ def consumption_add():
         return render_template('edit_cons.jj', server_method='consumption_add',
                 values={}, error='')
     else:
+        #TODO: improve values checks
         _f = request.form
         if (_f['date'].strip() and _f['value'].strip() and
                 _f['rate'].strip()):
@@ -43,11 +44,10 @@ def consumption_add():
             db.session.add(_rate)
             g._commit_requested = True
             return redirect(url_for('consumption_add'))
-            return 'OK'
         values = {
             'date': _f['date'],
             'value': _f['value'],
-            'rate': int(_f['rate']),
+            'rate': _f['rate'],
         }
         error = 'A value is missing'
         return render_template('edit_cons.jj', error=error,
