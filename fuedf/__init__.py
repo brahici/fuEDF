@@ -7,7 +7,7 @@ import datetime
 
 from flask import Flask
 from flask import g
-from flaskext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 
 # base directory
 here = os.path.dirname(os.path.abspath(__file__))
