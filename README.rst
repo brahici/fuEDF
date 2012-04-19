@@ -8,9 +8,10 @@ It's powered by Flask. Data persists in a sqlite3 database, handled through
 Flask-Alchemy.
 
 It requires some javascript libraries:
- - jQuery for ajax calls
- - Highcharts for chart rendering
- - momentjs for date handling
+
+- jQuery for ajax calls
+- Highcharts for chart rendering
+- momentjs for date handling
 
 
 Licence
@@ -45,10 +46,16 @@ in the requirements.
 
 For the javascript libraries, jQuery is loaded from ajax.googleapis.com. You
 have to manually download and install Highcharts and momentjs.
- - http://www.highcharts.com
- - http://momentjs.com
+
+- http://www.highcharts.com
+- http://momentjs.com
+
 These libraries has to be installed in fuedf/static/js/ (works fine with
 symbolic links).
+
+To initialize the database (structure + Tempo rates)::
+
+    $ python fuedf.py initdb
 
 
 Running
@@ -56,9 +63,11 @@ Running
 
 You can run fuEDF as standalone web server or through a WSGI server.
 
-Standalone
-$ python fuedf.py
+Standalone::
 
-WSGI server (e.g. gunicorn)
-$ gunicorn -w1 -b:5000 fuedf:app
+    $ python fuedf.py
+
+WSGI server (e.g. gunicorn)::
+
+    $ gunicorn -w1 -b:5000 fuedf:app
 
