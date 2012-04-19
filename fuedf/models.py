@@ -5,7 +5,7 @@ import os
 import datetime
 import types
 
-from flaskext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 
 from . import app
 
