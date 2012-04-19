@@ -2,6 +2,8 @@
 #encoding: utf-8
 
 import os
+from types import StringTypes
+import datetime
 
 from flask import Flask
 from flask import g
@@ -17,6 +19,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s/fuedf.db' % here
 #print app.config['SQLALCHEMY_DATABASE_URI']
 
 def _jinja2_filter_datetime(date, fmt='%c'):
+    if isinstance(date, StringTypes):
+        try:
+            date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        except Exception, e:
+            print(e)
+            return date
     return date.strftime(fmt)
 
 def _jinja2_filter_reversed(iterable):
