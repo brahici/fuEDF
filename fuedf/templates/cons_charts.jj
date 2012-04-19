@@ -3,6 +3,7 @@
 {% block jsinc %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="/static/js/highcharts.js" type="text/javascript"></script>
+<script src="/static/js/moment.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 var cons_chart;
@@ -35,11 +36,15 @@ gcd_cb = function(data, status) {
         xAxis: {
             categories: data.dates,
             tickmarkPlacement: 'on',
+            type: 'date',
             labels: {
                 align: 'right',
                 rotation: -25,
                 x: 0,
-                y: 15
+                y: 15,
+                formatter: function() {
+                    return moment(this.value, 'YYYY-MM-DD').format('DD.MM.YYYY');
+                }
             }
         },
         series: series
@@ -109,9 +114,9 @@ criteria_onchange = function() {
     <option value="">----</option>
     {% for date in dates|reversed %}
         {% if date == start_date %}
-            <option value="{{ date }}" selected="selected">{{ date }}</option>
+            <option value="{{ date }}" selected="selected">{{ date|datetime('%d.%m.%Y') }}</option>
         {% else %}
-            <option value="{{ date }}">{{ date }}</option>
+            <option value="{{ date }}">{{ date|datetime('%d.%m.%Y') }}</option>
         {% endif %}
     {% endfor %}
 </select>
@@ -120,9 +125,9 @@ criteria_onchange = function() {
     <option value="">----</option>
     {% for date in dates|reversed %}
         {% if date == end_date %}
-            <option value="{{ date }}" selected="selected">{{ date }}</option>
+            <option value="{{ date }}" selected="selected">{{ date|datetime('%d.%m.%Y') }}</option>
         {% else %}
-            <option value="{{ date }}">{{ date }}</option>
+            <option value="{{ date }}">{{ date|datetime('%d.%m.%Y') }}</option>
         {% endif %}
     {% endfor %}
 </select>
