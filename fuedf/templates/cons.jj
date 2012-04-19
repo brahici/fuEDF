@@ -22,5 +22,5 @@
         <li><a href="{{ url_for('get_rates_cons', rate_rid=rate.rid) }}" style="color: {{ rate.color }};">{{ rate.name }}</a></li>
     {% endfor %}
     </ul>
-<div>
+</div>
 {% endblock body %}
