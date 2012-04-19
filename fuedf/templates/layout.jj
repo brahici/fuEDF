@@ -13,5 +13,6 @@
     <div id="content">
         {% block body %}{% endblock %}
     </div>
+    <div id="footer">(c) 2012 <a href="http://www.brahici.org">Brice Vissi&egrave;re</a>
+        -- powered by <a href="http://flask.pocoo.org/">Flask</a></div>
 </div>
-

@@ -100,3 +100,10 @@ a,a:visited {
   text-align: center;
   border: 0.05em dotted #000000;
 }
+
+#footer
+{
+    margin-top: 1em;
+    text-align: center;
+    font-size: 0.8em;
+}
