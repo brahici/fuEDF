@@ -7,10 +7,12 @@ from flask import render_template, request, redirect, url_for, g, jsonify
 
 from . import app
 from .models import db, Consumption, Rate, User
+import cache
 
 DEFAULT_CHART_WEEKS_COUNT = 10
 
 @app.route('/', methods=['GET', ])
+@cache.cached('view')
 def index():
     page = request.args.get('page', 1)
     try:
@@ -43,6 +45,7 @@ def consumption_add():
             _rate = Consumption(date_, rate_, value_, delta_)
             db.session.add(_rate)
             g._commit_requested = True
+            cache.cached.clear()
             return redirect(url_for('consumption_add'))
         values = {
             'date': _f['date'],
@@ -54,20 +57,24 @@ def consumption_add():
                 server_method='consumption_add', values=values)
 
 @app.route('/cons/<int:rate_rid>')
+@cache.cached('view')
 def get_rates_cons(rate_rid):
     entries = Consumption.query.filter(Consumption.rate_id == rate_rid)\
             .order_by('date desc').all()
     total = sum([cons.delta for cons in entries])
     return render_template('cons.jj', entries=entries, total=total)
 
+# no need to cache this one
+# g.rates is set with a cached function
 @app.route('/_get_rates')
 def get_rates():
     rates_ = []
     for rate in g.rates:
-        rates_.append((rate.name, rate.rid))
+        rates_.append((rate['name'], rate['rid']))
     return jsonify(rates=dict(rates_))
 
 @app.route('/_get_current_totals')
+@cache.cached('view')
 def _get_current_totals():
     today = datetime.date.today()
     start_date = datetime.date(today.year, 9, 1)
@@ -81,6 +88,7 @@ def _get_current_totals():
     return jsonify(totals=res)
 
 @app.route('/charts')
+@cache.cached('view')
 def consumption_charts():
     dates = [cons.date.strftime('%Y-%m-%d')
             for cons in Consumption.query.distinct(Consumption.date) \
@@ -95,6 +103,7 @@ def consumption_charts():
 _DATA_CHART_MODES = ['values', 'progressive', 'total', 'global', ]
 
 @app.route('/_get_charts_data')
+@cache.cached('view')
 def _get_charts_data():
     mode = request.args.get('mode', 'values')
     start_date = request.args.get('start_date')

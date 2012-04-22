@@ -33,16 +33,23 @@ def _jinja2_filter_reversed(iterable):
 app.jinja_env.filters['datetime'] = _jinja2_filter_datetime
 app.jinja_env.filters['reversed'] = _jinja2_filter_reversed
 
+# import cache
+from cache import cached
+
 # import models
 from . import models
 
 # import views
 from . import views
 
+@cached('data', timeout=43200)
+def _get_rates():
+    return [{'rid': rate.rid, 'name': rate.name, 'color': rate.color} \
+            for rate in models.Rate.query.all()]
 
 @app.before_request
 def before_request():
-    g.rates = models.Rate.query.all()
+    g.rates = _get_rates()
     g._commit_requested = False
 
 @app.teardown_request
