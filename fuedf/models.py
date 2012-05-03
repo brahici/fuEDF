@@ -46,7 +46,7 @@ class Rate(db.Model):
         self.color = color
 
     def __repr__(self):
-        return '<Rate %r(%r)' % (self.name, self.rid)
+        return '<Rate %r(%r)>' % (self.name, self.rid)
 
 class User(db.Model):
     __tablename__ = 'fuedf_user'
@@ -63,6 +63,6 @@ class User(db.Model):
         self.password = password
 
     def __repr__(self):
-        return '<User %r(%r)' % (self.name, self.rid)
+        return '<User %r(%r)>' % (self.name, self.rid)
 
 
