@@ -73,20 +73,6 @@ def get_rates():
         rates_.append((rate['name'], rate['rid']))
     return jsonify(rates=dict(rates_))
 
-@app.route('/_get_current_totals')
-@cache.cached('view')
-def _get_current_totals():
-    today = datetime.date.today()
-    start_date = datetime.date(today.year, 9, 1)
-    if today.month < 9:
-        start_date = start_date.replace(today.year - 1)
-    consumptions = Consumption.query.filter(Consumption.date>=start_date).all()
-    res_ = {}
-    for cons in consumptions:
-        res_.setdefault(cons.rate.name, []).append(cons.delta)
-    res = dict((rate_name, sum(values)) for rate_name, values in res_.items())
-    return jsonify(totals=res)
-
 @app.route('/charts')
 @cache.cached('view')
 def consumption_charts():
