@@ -5,6 +5,8 @@ import os
 import unittest
 import tempfile
 import json
+import datetime
+
 import bs4 as BeautifulSoup
 
 import fuedf
@@ -298,6 +300,177 @@ class FuedfTestCase(unittest.TestCase):
         vals.sort()
         ref.sort()
         self.assertListEqual(vals, ref)
+
+    def test_0017_get_charts_data_default_values(self):
+        res = json.loads(_APP.get('/_get_charts_data?mode=nocando').data) \
+                ['values']
+        ref = [list(l) for l in zip(
+                [0 for i in range(6)] ,
+                [e[0]-e[1] for e in zip([data[2] for data in DATA_SET_2],
+                        [data[2] for data in DATA_SET_1])],
+                [e[0]-e[1] for e in zip([data[2] for data in DATA_SET_3],
+                        [data[2] for data in DATA_SET_2])]
+                )
+        ]
+        vals = res.values()
+        # need to sort values else test does not succeed
+        # no matter, test values were chosen in order to be unique
+        vals.sort()
+        ref.sort()
+        self.assertListEqual(vals, ref)
+
+    def test_0018_get_charts_data_date_inverted(self):
+        res = json.loads(_APP.get('/_get_charts_data?start_date=2012-01-15' \
+                '&end_date=2012-01-01').data)['values']
+        ref = [list(l) for l in zip(
+                [0 for i in range(6)] ,
+                [e[0]-e[1] for e in zip([data[2] for data in DATA_SET_2],
+                        [data[2] for data in DATA_SET_1])],
+                [e[0]-e[1] for e in zip([data[2] for data in DATA_SET_3],
+                        [data[2] for data in DATA_SET_2])]
+                )
+        ]
+        vals = res.values()
+        # need to sort values else test does not succeed
+        # no matter, test values were chosen in order to be unique
+        vals.sort()
+        ref.sort()
+        self.assertListEqual(vals, ref)
+
+    def test_0019_get_charts_data_no_end_date(self):
+        res = json.loads(_APP.get('/_get_charts_data?start_date=2012-01-01') \
+                .data)['values']
+        ref = [list(l) for l in zip(
+                [0 for i in range(6)] ,
+                [e[0]-e[1] for e in zip([data[2] for data in DATA_SET_2],
+                        [data[2] for data in DATA_SET_1])],
+                [e[0]-e[1] for e in zip([data[2] for data in DATA_SET_3],
+                        [data[2] for data in DATA_SET_2])]
+                )
+        ]
+        vals = res.values()
+        # need to sort values else test does not succeed
+        # no matter, test values were chosen in order to be unique
+        vals.sort()
+        ref.sort()
+        self.assertListEqual(vals, ref)
+
+    def test_0020_get_charts_data_no_start_date(self):
+        res = json.loads(_APP.get('/_get_charts_data?end_date=2012-01-15') \
+                .data)['values']
+        ref = [list(l) for l in zip(
+                [0 for i in range(6)] ,
+                [e[0]-e[1] for e in zip([data[2] for data in DATA_SET_2],
+                        [data[2] for data in DATA_SET_1])],
+                [e[0]-e[1] for e in zip([data[2] for data in DATA_SET_3],
+                        [data[2] for data in DATA_SET_2])]
+                )
+        ]
+        vals = res.values()
+        # need to sort values else test does not succeed
+        # no matter, test values were chosen in order to be unique
+        vals.sort()
+        ref.sort()
+        self.assertListEqual(vals, ref)
+
+    def test_0021_rates_cons_view(self):
+        res = _APP.get('/cons/1')
+        soup = BeautifulSoup.BeautifulSoup(res.data)
+        self.assertEqual(soup.find(id='consumptions').text.count(
+                'BleuCreuses'), 3)
+        total = sum([DATA_SET_2[1][2]-DATA_SET_1[1][2],
+                DATA_SET_3[1][2]-DATA_SET_2[1][2],])
+        self.assertEqual(soup.find(id='cons_total').text, str(total))
+
+
+        #date_start = soup.find(id='date_start')
+        #for option in date_start.find_all('option'):
+        #    if option.get('selected') == 'selected':
+        #        self.assertEqual(option.get('value'), DATA_SET_1[0][0])
+        #date_end = soup.find(id='date_end')
+        #for option in date_end.find_all('option'):
+        #    if option.get('selected') == 'selected':
+        #        self.assertEqual(option.get('value'), DATA_SET_3[0][0])
+
+    def test_0022_filter_datetime_date(self):
+        val = fuedf._jinja2_filter_datetime(datetime.date.today())
+        ref = datetime.date.today().strftime('%c')
+        self.assertEqual(val, ref)
+
+    def test_0023_filter_datetime_format(self):
+        val = fuedf._jinja2_filter_datetime(datetime.date.today(), '%Y%m%d')
+        ref = datetime.date.today().strftime('%Y%m%d')
+        self.assertEqual(val, ref)
+
+    def test_0024_filter_datetime_string(self):
+        val = fuedf._jinja2_filter_datetime(datetime.date.today() \
+                .strftime('%Y-%m-%d'))
+        ref = datetime.date.today().strftime('%c')
+        self.assertEqual(val, ref)
+
+    def test_0025_filter_datetime_string_not_a_date(self):
+        ref = 'not a date'
+        val = fuedf._jinja2_filter_datetime(ref)
+        self.assertEqual(val, ref)
+
+    def test_0026_filter_reversed_iterable(self):
+        ref = [1, 2, 3,]
+        val = list(fuedf._jinja2_filter_reversed(ref))
+        ref.reverse()
+        self.assertListEqual(val, ref)
+
+    def test_0027_filter_reversed_not_iterable(self):
+        val = fuedf._jinja2_filter_reversed(None)
+        self.assertIsNone(val)
+
+    def test_0028_cache(self):
+        @fuedf.cached('data')
+        def do_it(arg):
+            return arg*2
+        ref = 'spam'
+        val = do_it(ref)
+        self.assertEqual(val, ref*2)
+        val2 = do_it(val)
+        self.assertEqual(val2, val)
+
+    def test_0029_cache_unknownkind(self):
+        @fuedf.cached('hidden_face_of_doh')
+        def no_can_do(arg):
+            return arg*2
+        ref = 'spam'
+        val = no_can_do(ref)
+        self.assertEqual(val, ref*2)
+        val2 = no_can_do(val)
+        self.assertEqual(val2, val*2)
+
+    def test_0030_consumption_with_date(self):
+        today = datetime.date.today()
+        cons = fuedf.models.Consumption(today, 1, 1000)
+        self.assertEqual(cons.date, today)
+
+    def test_0031_repr_methods(self):
+        today = datetime.date.today()
+        cons = fuedf.models.Consumption(today, 1, 1000)
+        ref_cons = '<Consumption None@%r>' % today
+        self.assertEqual(repr(cons), ref_cons)
+
+        rate = fuedf.models.Rate('test', '#123456')
+        ref_rate = "<Rate 'test'(None)>"
+        self.assertEqual(repr(rate), ref_rate)
+
+        user = fuedf.models.User('user', 'eggs@spam.org', 'user', 'user')
+        ref_user = "<User 'user'(None)>"
+        self.assertEqual(repr(user), ref_user)
+
+    def test_0032_index_nopage(self):
+        res = _APP.get('/?page=')
+        self.assertIn('<title>Redirecting...</title>', res.data)
+
+    def test_0033_index_page_doesnotexit(self):
+        res = _APP.get('/?page=10')
+        self.assertIn('No entries so far', res.data)
+        self.assertNotIn('Chart view', res.data)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
