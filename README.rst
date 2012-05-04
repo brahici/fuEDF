@@ -55,7 +55,7 @@ symbolic links).
 
 To initialize the database (structure + Tempo rates)::
 
-    $ python fuedf.py initdb
+    $ python runfuedf.py initdb
 
 
 Running
@@ -65,7 +65,7 @@ You can run fuEDF as standalone web server or through a WSGI server.
 
 Standalone::
 
-    $ python fuedf.py
+    $ python runfuedf.py
 
 WSGI server (e.g. gunicorn)::
 
