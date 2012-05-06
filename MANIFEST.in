@@ -1,0 +1,10 @@
+include fuedf_tests.py
+include README.rst
+include LICENCE
+include AUTHORS
+include pip-requirements.txt
+include fuedf/static/style.css
+recursive-include fuedf/static/js *
+recursive-include fuedf/static/htmlcov *
+recursive-include fuedf/templates *
+exclude MANIFEST.in
