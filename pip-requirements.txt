@@ -1,2 +1,5 @@
 Flask
 Flask-SQLAlchemy
+BeautifulSoup4
+nose
+coverage
