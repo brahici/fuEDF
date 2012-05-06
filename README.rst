@@ -1,3 +1,4 @@
+
 fuEDF
 =====
 
@@ -7,11 +8,11 @@ Tempo contract).
 It's powered by Flask. Data persists in a sqlite3 database, handled through
 Flask-Alchemy.
 
-It requires some javascript libraries:
+fuEDF uses some javascript libraries:
 
-- jQuery for ajax calls
-- Highcharts for chart rendering
-- momentjs for date handling
+- jQuery for ajax calls (http://jquery.com)
+- Highcharts for chart rendering (http://www.highcharts.com)
+- momentjs for date handling (http://momentjs.com)
 
 
 Licence
@@ -39,23 +40,27 @@ Installation
 I recommand to use a virtual environment with virtualenvwrapper:
 http://www.doughellmann.com/projects/virtualenvwrapper/
 
-Use pip-requirements.txt for installing Python dependencies.
+Install fuEDF and dependencies::
 
-Please note that BeautifulSoup4 is required for the tests suite, but is not
-in the requirements.
+    $ python setup.py install
 
-For the javascript libraries, jQuery is loaded from ajax.googleapis.com. You
-have to manually download and install Highcharts and momentjs.
+fuEDF is shipped with momentjs and Highcharts. jQuery is loaded from
+ajax.googleapis.com.
 
-- http://www.highcharts.com
-- http://momentjs.com
+**Be aware that Highcharts is not free for commercial use**. See
+http://shop.highsoft.com/highcharts.html for details.
 
-These libraries has to be installed in fuedf/static/js/ (works fine with
-symbolic links).
+You can perform unitests by running directly fuedf_test.py. You may want to
+run tests with nosetests, as it will also perform a coverage measure::
+
+    $ python setup.py nosetests
+
+You can view coverage HTML report directly in fuEDF if you reinstall fuEDF
+after running nosetests (a link will appear in application root view).
 
 To initialize the database (structure + Tempo rates)::
 
-    $ python runfuedf.py initdb
+    $ runfuedf.py initdb
 
 
 Running
@@ -65,7 +70,7 @@ You can run fuEDF as standalone web server or through a WSGI server.
 
 Standalone::
 
-    $ python runfuedf.py
+    $ runfuedf.py
 
 WSGI server (e.g. gunicorn)::
 
