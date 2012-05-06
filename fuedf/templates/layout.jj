@@ -14,5 +14,9 @@
         {% block body %}{% endblock %}
     </div>
     <div id="footer">(c) 2012 <a href="http://www.brahici.org">Brice Vissi&egrave;re</a>
-        -- powered by <a href="http://flask.pocoo.org/">Flask</a></div>
+        -- powered by <a href="http://flask.pocoo.org/">Flask</a>
+    {% if g._show_coverage %}
+        -- <a href="{{url_for('static', filename="htmlcov/index.html")}}" target="_blank">see coverage result</a>
+    {% endif %}
+    </div>
 </div>

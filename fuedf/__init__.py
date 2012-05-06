@@ -34,6 +34,9 @@ def _jinja2_filter_reversed(iterable):
 app.jinja_env.filters['datetime'] = _jinja2_filter_datetime
 app.jinja_env.filters['reversed'] = _jinja2_filter_reversed
 
+# coverage HTML report path
+coverage_html = os.path.join(here, 'static', 'htmlcov', 'index.html')
+
 # import cache
 from cache import cached
 
@@ -52,6 +55,7 @@ def _get_rates():
 def before_request():
     g.rates = _get_rates()
     g._commit_requested = False
+    g._show_coverage = os.path.exists(coverage_html)
 
 @app.teardown_request
 def teardown_request(exception):
