@@ -52,6 +52,12 @@ gcd_cb = function(data, status) {
 };
 
 $(document).ready(function() {
+    var footer_style = {
+        'position': 'absolute',
+        'left': '0em',
+        'right': '0em',
+        'bottom': '1em'};
+    $('#footer').css(footer_style);
     var args = {
         'mode': 'values',
         'start_date': '{{ start_date  }}',
@@ -135,7 +141,7 @@ criteria_onchange = function() {
 <button onclick="reset_criterias();">Reset</button>
 </div>
 
-<div id="chart_container" style="width: 95%; height: 50em;"></div>
+<div id="chart_container"></div>
 
 {% endblock body %}
 

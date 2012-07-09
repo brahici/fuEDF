@@ -103,7 +103,15 @@ a,a:visited {
 
 #footer
 {
-    margin-top: 1em;
-    text-align: center;
-    font-size: 0.8em;
+  margin-top: 1em;
+  text-align: center;
+  font-size: 0.8em;
+}
+
+#chart_container {
+  position: absolute;
+  bottom: 4em;
+  right: 0em;
+  left: 9.4em;
+  top: 4em;
 }
