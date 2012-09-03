@@ -47,6 +47,9 @@ gcd_cb = function(data, status) {
                 }
             }
         },
+        yAxis: {
+            title: { text:'kW/h'},
+        },
         series: series
     });
 };
