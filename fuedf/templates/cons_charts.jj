@@ -10,6 +10,7 @@ var cons_chart;
 
 gcd_cb = function(data, status) {
     var series = [];
+    var new_type = ($('#spline_chart').is(':checked') ? 'spline' : 'line');
     $.each(data.rates, function(idx, rate) {
         var _style = 'Solid';
         var _color = '#3d96ae';
@@ -23,7 +24,8 @@ gcd_cb = function(data, status) {
             name: rate,
             data: data.values[rate],
             color: _color,
-            dashStyle: _style});
+            dashStyle: _style,
+            type: new_type});
     });
     cons_chart = new Highcharts.Chart({
         chart: {
@@ -100,6 +102,21 @@ criteria_onchange = function() {
     }
 }
 
+spline_chart_onchange = function() {
+    var new_type = ($('#spline_chart').is(':checked') ? 'spline' : 'line');
+    for (idx=0; idx<cons_chart.series.length; idx++) {
+        var serie = cons_chart.series[0];
+        cons_chart.addSeries({
+            type: new_type,
+            name: serie.name,
+            data: serie.options.data,
+            color: serie.color,
+            dashStyle: serie.dashStyle
+        }, true);
+        serie.remove();
+    }
+}
+
 </script>
 {% endblock jsinc %}
 
@@ -110,6 +127,10 @@ criteria_onchange = function() {
 <input type="checkbox" name="dynamic_chart" id="dynamic_chart"
         onchange="dynamic_chart_onchange()"></input>
 </span>
+<span class="indent">Spline chart :
+<input type="checkbox" name="spline_chart" id="spline_chart"
+        onchange="spline_chart_onchange()"></input>
+</span>
 <br>
 <span>Chart mode : </span>
 <select id="chart_mode" name="chart_mode" onchange="criteria_onchange();">
@@ -118,7 +139,7 @@ criteria_onchange = function() {
     <option value="total">Total</option>
     <option value="global">Global</option>
 </select>
-<span>Date start : </span>
+<span class="indent">Date start : </span>
 <select id="date_start" name="date_start" onchange="criteria_onchange();">
     <option value="">----</option>
     {% for date in dates|reversed %}
@@ -129,7 +150,7 @@ criteria_onchange = function() {
         {% endif %}
     {% endfor %}
 </select>
-<span>Date end : </span>
+<span class="indent">Date end : </span>
 <select id="date_end" name="date_end" onchange="criteria_onchange();">
     <option value="">----</option>
     {% for date in dates|reversed %}
