@@ -13,6 +13,7 @@ fuEDF uses some javascript libraries:
 - jQuery for ajax calls (http://jquery.com)
 - Highcharts for chart rendering (http://www.highcharts.com)
 - momentjs for date handling (http://momentjs.com)
+- spin.js for spinner (http://fgnass.github.com/spin.js/)
 
 
 Licence
@@ -44,7 +45,7 @@ Install fuEDF and dependencies::
 
     $ python setup.py install
 
-fuEDF is shipped with momentjs and Highcharts. jQuery is loaded from
+fuEDF is shipped with momentjs, spin.js and Highcharts. jQuery is loaded from
 ajax.googleapis.com.
 
 **Be aware that Highcharts is not free for commercial use**. See

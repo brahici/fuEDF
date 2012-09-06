@@ -111,11 +111,36 @@ a,a:visited {
 #chart_container {
   position: absolute;
   bottom: 4em;
-  right: 0em;
+  right: 0.1em;
   left: 9.4em;
   top: 4em;
 }
 
 .indent {
     padding-left: 2em;
+}
+
+#loading {
+    position: absolute;
+    top: 0em;
+    left:0em;
+    right: 0em;
+    bottom: 0em;
+    z-index: 100;
+    background-color: #fefefe;
+    opacity: 0.5;
+    display: none;
+}
+
+/* not used */
+#loading-alternative {
+    position: absolute;
+    top: 6.0em;
+    left: 1.2em;
+    width: 9.0em;
+    height: 9.0em;
+    z-index: 100;
+    background-color: #cccccc;
+    display: none;
+    border-radius: 1em 1em;
 }

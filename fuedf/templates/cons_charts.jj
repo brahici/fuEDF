@@ -4,8 +4,43 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="/static/js/highcharts.js" type="text/javascript"></script>
 <script src="/static/js/moment.min.js" type="text/javascript"></script>
+<script src="/static/js/spin.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+
+$.fn.spin = function(opts) {
+  this.each(function() {
+    var $this = $(this), data = $this.data();
+
+    if (data.spinner) {
+      data.spinner.stop();
+      delete data.spinner;
+    }
+    if (opts !== false) {
+      data.spinner = new Spinner($.extend({color: $this.css('color')}, opts)).spin(this);
+    }
+  });
+  return this;
+};
+
+var spinner_options = {
+  lines: 13,
+  length: 5,
+  width: 17,
+  radius: 36,
+  corners: 0.7,
+  rotate: 0,
+  color: '#000000',
+  speed: 1.7,
+  trail: 35,
+  shadow: false,
+  hwaccel: true,
+  className: 'spinner',
+  zIndex: 2e9,
+  top: 'auto',
+  left: 'auto'
+};
+
 var cons_chart;
 
 gcd_cb = function(data, status) {
@@ -30,10 +65,15 @@ gcd_cb = function(data, status) {
     cons_chart = new Highcharts.Chart({
         chart: {
             renderTo: 'chart_container',
-            type: 'line'
+            animation: false
         },
         title: {
             text: 'EDF Consumptions'
+        },
+        plotOptions: {
+            series: {
+                animation:false
+            }
         },
         xAxis: {
             categories: data.dates,
@@ -50,32 +90,21 @@ gcd_cb = function(data, status) {
             }
         },
         yAxis: {
-            title: { text:'kW/h'},
+            title: {
+                text:'kW/h'
+            },
         },
         series: series
     });
 };
 
-$(document).ready(function() {
-    var footer_style = {
-        'position': 'absolute',
-        'left': '0em',
-        'right': '0em',
-        'bottom': '1em'};
-    $('#footer').css(footer_style);
-    var args = {
-        'mode': 'values',
-        'start_date': '{{ start_date  }}',
-        'end_date': '{{ end_date  }}',
-    }
-    $.getJSON('/_get_charts_data', args, gcd_cb);
-});
-
 refresh_chart = function() {
-    var mode = $('#chart_mode').val();
-    var dt_start = $('#date_start').val();
-    var dt_end = $('#date_end').val();
-    $.getJSON('/_get_charts_data', {'mode': mode, 'start_date': dt_start, 'end_date': dt_end}, gcd_cb);
+    call_with_spinner(function () {
+        var mode = $('#chart_mode').val();
+        var dt_start = $('#date_start').val();
+        var dt_end = $('#date_end').val();
+        $.getJSON('/_get_charts_data', {'mode': mode, 'start_date': dt_start, 'end_date': dt_end}, gcd_cb);
+    });
 }
 
 reset_criterias = function() {
@@ -102,70 +131,103 @@ criteria_onchange = function() {
     }
 }
 
-spline_chart_onchange = function() {
-    var new_type = ($('#spline_chart').is(':checked') ? 'spline' : 'line');
-    for (idx=0; idx<cons_chart.series.length; idx++) {
-        var serie = cons_chart.series[0];
-        cons_chart.addSeries({
-            type: new_type,
-            name: serie.name,
-            data: serie.options.data,
-            color: serie.color,
-            dashStyle: serie.dashStyle
-        }, true);
-        serie.remove();
-    }
+call_with_spinner = function(fcn) {
+    var loading = $('#loading');
+    // display container before 'spinning'
+    // else spinner is not centered
+    loading.show();
+    var spinner = loading.spin(spinner_options);
+    window.setTimeout(function() {
+        fcn();
+        spinner.stop();
+        loading.hide();
+    }, 500);
 }
+
+spline_chart_onchange = function() {
+    call_with_spinner(function() {
+        var new_type = ($('#spline_chart').is(':checked') ? 'spline' : 'line');
+        for (idx=0; idx<cons_chart.series.length; idx++) {
+            var serie = cons_chart.series[0];
+            if(serie.name.indexOf('Creuses') != -1) {
+                _style = 'ShortDot';
+            } else {
+                _style = 'Solid';
+            }
+            cons_chart.addSeries({
+                type: new_type,
+                name: serie.name,
+                data: serie.options.data,
+                color: serie.color,
+                dashStyle: serie.options.dashStyle
+            }, false);
+            serie.remove();
+        }
+    });
+}
+
+$(document).ready(function() {
+    var footer_style = {
+        'position': 'absolute',
+        'left': '0em',
+        'right': '0em',
+        'bottom': '1em'};
+    $('#footer').css(footer_style);
+    var args = {
+        'mode': 'values',
+        'start_date': '{{ start_date  }}',
+        'end_date': '{{ end_date  }}',
+    }
+    $.getJSON('/_get_charts_data', args, gcd_cb);
+});
 
 </script>
 {% endblock jsinc %}
 
 {% block body %}
+        <div id="chart_criteria_container">
+            <span>Dynamic chart :
+                <input type="checkbox" name="dynamic_chart" id="dynamic_chart"
+                        onchange="dynamic_chart_onchange()"></input>
+            </span>
+            <span class="indent">Spline chart :
+                <input type="checkbox" name="spline_chart" id="spline_chart"
+                        onchange="spline_chart_onchange()"></input>
+            </span>
+            <br>
+            <span>Chart mode : </span>
+            <select id="chart_mode" name="chart_mode" onchange="criteria_onchange();">
+                <option value="values" selected="selected">Values</option>
+                <option value="progressive">Progressive</option>
+                <option value="total">Total</option>
+                <option value="global">Global</option>
+            </select>
+            <span class="indent">Date start : </span>
+            <select id="date_start" name="date_start" onchange="criteria_onchange();">
+                <option value="">----</option>
+                {% for date in dates|reversed %}
+                    {% if date == start_date %}
+                        <option value="{{ date }}" selected="selected">{{ date|datetime('%d.%m.%Y') }}</option>
+                    {% else %}
+                        <option value="{{ date }}">{{ date|datetime('%d.%m.%Y') }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <span class="indent">Date end : </span>
+            <select id="date_end" name="date_end" onchange="criteria_onchange();">
+                <option value="">----</option>
+                {% for date in dates|reversed %}
+                    {% if date == end_date %}
+                        <option value="{{ date }}" selected="selected">{{ date|datetime('%d.%m.%Y') }}</option>
+                    {% else %}
+                        <option value="{{ date }}">{{ date|datetime('%d.%m.%Y') }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <button id="button_apply" onclick="refresh_chart();">Apply</button>
+            <button onclick="reset_criterias();">Reset</button>
+        </div>
 
-<div id="chart_criteria_container">
-<span>Dynamic chart :
-<input type="checkbox" name="dynamic_chart" id="dynamic_chart"
-        onchange="dynamic_chart_onchange()"></input>
-</span>
-<span class="indent">Spline chart :
-<input type="checkbox" name="spline_chart" id="spline_chart"
-        onchange="spline_chart_onchange()"></input>
-</span>
-<br>
-<span>Chart mode : </span>
-<select id="chart_mode" name="chart_mode" onchange="criteria_onchange();">
-    <option value="values" selected="selected">Values</option>
-    <option value="progressive">Progressive</option>
-    <option value="total">Total</option>
-    <option value="global">Global</option>
-</select>
-<span class="indent">Date start : </span>
-<select id="date_start" name="date_start" onchange="criteria_onchange();">
-    <option value="">----</option>
-    {% for date in dates|reversed %}
-        {% if date == start_date %}
-            <option value="{{ date }}" selected="selected">{{ date|datetime('%d.%m.%Y') }}</option>
-        {% else %}
-            <option value="{{ date }}">{{ date|datetime('%d.%m.%Y') }}</option>
-        {% endif %}
-    {% endfor %}
-</select>
-<span class="indent">Date end : </span>
-<select id="date_end" name="date_end" onchange="criteria_onchange();">
-    <option value="">----</option>
-    {% for date in dates|reversed %}
-        {% if date == end_date %}
-            <option value="{{ date }}" selected="selected">{{ date|datetime('%d.%m.%Y') }}</option>
-        {% else %}
-            <option value="{{ date }}">{{ date|datetime('%d.%m.%Y') }}</option>
-        {% endif %}
-    {% endfor %}
-</select>
-<button id="button_apply" onclick="refresh_chart();">Apply</button>
-<button onclick="reset_criterias();">Reset</button>
-</div>
-
-<div id="chart_container"></div>
-
+        <div id="chart_container"></div>
 {% endblock body %}
 

@@ -20,3 +20,5 @@
     {% endif %}
     </div>
 </div>
+<div id="loading">
+</div>
