@@ -45,6 +45,7 @@ var cons_chart;
 
 gcd_cb = function(data, status) {
     var series = [];
+    var dates = [];
     var new_type = ($('#spline_chart').is(':checked') ? 'spline' : 'line');
     $.each(data.rates, function(idx, rate) {
         var _style = 'Solid';
@@ -62,6 +63,9 @@ gcd_cb = function(data, status) {
             dashStyle: _style,
             type: new_type});
     });
+    $.each(data.dates, function(idx, _date) {
+        dates.push(moment(_date, 'YYYY-MM-DD').format('DD.MM.YYYY'));
+    });
     cons_chart = new Highcharts.Chart({
         chart: {
             renderTo: 'chart_container',
@@ -76,17 +80,14 @@ gcd_cb = function(data, status) {
             }
         },
         xAxis: {
-            categories: data.dates,
+            categories: dates,
             tickmarkPlacement: 'on',
             type: 'date',
             labels: {
                 align: 'right',
                 rotation: -25,
                 x: 0,
-                y: 15,
-                formatter: function() {
-                    return moment(this.value, 'YYYY-MM-DD').format('DD.MM.YYYY');
-                }
+                y: 15
             }
         },
         yAxis: {
